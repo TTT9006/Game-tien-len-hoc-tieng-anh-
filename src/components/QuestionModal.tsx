@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGameStore } from '../store/useGameStore';
-import { CheckCircle2, XCircle, Eye, HelpCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Eye, HelpCircle, EyeOff, Maximize2 } from 'lucide-react';
 
 export const QuestionModal: React.FC = () => {
   const {
@@ -10,6 +10,8 @@ export const QuestionModal: React.FC = () => {
     currentTeamIndex,
     revealAnswer,
     handleAnswerResult,
+    isQuestionMinimized,
+    toggleQuestionMinimized,
   } = useGameStore();
 
   if (phase !== 'QUESTION' && phase !== 'ANSWER_REVEALED') {
@@ -18,6 +20,30 @@ export const QuestionModal: React.FC = () => {
 
   const currentTeam = teams[currentTeamIndex];
   if (!currentQuestion || !currentTeam) return null;
+
+  // Nếu giáo viên / học sinh bấm nút "Ẩn xem bài bàn trước", thu gọn thành thanh Widget góc trên
+  if (isQuestionMinimized) {
+    return (
+      <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-4 duration-300">
+        <div className="flex items-center space-x-3 px-5 py-2.5 bg-slate-900/95 border-2 border-amber-400 rounded-full shadow-2xl backdrop-blur-md">
+          <div className="flex items-center space-x-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+            <span className="text-xs font-black text-amber-300 uppercase tracking-wider">
+              {currentTeam.name} đang suy nghĩ
+            </span>
+          </div>
+
+          <button
+            onClick={toggleQuestionMinimized}
+            className="flex items-center space-x-1.5 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs rounded-full shadow cursor-pointer transition-transform active:scale-95"
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
+            <span>Hiện lại câu hỏi</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
@@ -32,8 +58,21 @@ export const QuestionModal: React.FC = () => {
               {currentTeam.name}
             </h2>
           </div>
-          <div className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">
-            {currentQuestion.category || 'English Challenge'}
+
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-semibold bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">
+              {currentQuestion.category || 'English Challenge'}
+            </span>
+
+            {/* Nút Ẩn / Tắt câu hỏi để xem bài người trước vừa đánh trên bàn */}
+            <button
+              onClick={toggleQuestionMinimized}
+              className="flex items-center space-x-1 px-3 py-1 bg-black/50 hover:bg-black/70 text-amber-300 text-xs font-bold rounded-lg border border-amber-400/40 shadow cursor-pointer"
+              title="Tạm ẩn câu hỏi để nhìn bàn bài"
+            >
+              <EyeOff className="w-3.5 h-3.5" />
+              <span>Xem bài trước</span>
+            </button>
           </div>
         </div>
 

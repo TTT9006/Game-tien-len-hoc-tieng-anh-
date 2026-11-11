@@ -134,6 +134,36 @@ class SoundService {
   }
 
   /**
+   * Âm thanh Xáo bài (Riffle Shuffle sột soạt chân thực)
+   */
+  public playShuffle() {
+    if (this.isMuted) return;
+    this.initContext();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    // Tạo chuỗi tiếng lật bài nhanh liên tục
+    for (let i = 0; i < 12; i++) {
+      const clickTime = now + i * 0.04;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(200 + Math.random() * 250, clickTime);
+      osc.frequency.exponentialRampToValueAtTime(80, clickTime + 0.03);
+
+      gain.gain.setValueAtTime(0.18, clickTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, clickTime + 0.03);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(clickTime);
+      osc.stop(clickTime + 0.03);
+    }
+  }
+
+  /**
    * Âm thanh Chiến thắng / Về nhất (Fanfare ăn mừng)
    */
   public playVictory() {

@@ -69,62 +69,62 @@ async function runCdpE2ETest() {
     console.log('1️⃣ Truy cập trang chủ Setup...');
     await page.goto('http://localhost:4173', { waitUntil: 'networkidle0' });
 
-    const setupShot = path.join(SCREENSHOT_DIR, '01-casino-setup.png');
-    await page.screenshot({ path: setupShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${setupShot}`);
-
-    // Chọn Chế độ Chuẩn Casino 13 lá
-    console.log('2️⃣ Chọn Chế độ Chuẩn Casino 13 Lá...');
-    await clickButtonWithText(page, 'Chế độ Chuẩn Casino');
-    await new Promise(r => setTimeout(r, 400));
-
     // Khởi động Trận Đấu
-    console.log('3️⃣ Nhấn nút [BẮT ĐẦU TRẬN ĐẤU]...');
+    console.log('2️⃣ Nhấn nút [BẮT ĐẦU TRẬN ĐẤU]...');
     await clickButtonWithText(page, 'BẮT ĐẦU TRẬN ĐẤU');
-    await new Promise(r => setTimeout(r, 1000));
 
-    // 4. Modal Câu hỏi Tiếng Anh hiện lên
-    console.log('4️⃣ Chờ Modal Câu Hỏi xuất hiện...');
-    const questionShot = path.join(SCREENSHOT_DIR, '02-casino-question-modal.png');
+    // Chụp lại màn hình hiệu ứng Xáo bài
+    await new Promise(r => setTimeout(r, 400));
+    const shuffleShot = path.join(SCREENSHOT_DIR, '07-shuffle-animation.png');
+    await page.screenshot({ path: shuffleShot, fullPage: true });
+    console.log(`📸 Đã lưu ảnh chụp Xáo Bài: ${shuffleShot}`);
+
+    // Chờ hết hiệu ứng xáo bài và câu hỏi xuất hiện
+    await new Promise(r => setTimeout(r, 1200));
+
+    // 3. Modal Câu hỏi Tiếng Anh hiện lên
+    console.log('3️⃣ Kiểm tra Modal Câu Hỏi và Nút [Xem bài trước]...');
+    const questionShot = path.join(SCREENSHOT_DIR, '08-question-with-peek-button.png');
     await page.screenshot({ path: questionShot, fullPage: true });
     console.log(`📸 Đã lưu ảnh chụp: ${questionShot}`);
 
-    // 5. Giáo viên bấm "Hiện đáp án"
-    console.log('5️⃣ Giáo viên bấm [Hiện đáp án]...');
-    await clickButtonWithText(page, 'Hiện đáp án');
+    // 4. Bấm nút "Xem bài trước" để ẩn câu hỏi
+    console.log('4️⃣ Bấm nút [Xem bài trước] để ẩn câu hỏi xem mặt bàn...');
+    await clickButtonWithText(page, 'Xem bài trước');
     await new Promise(r => setTimeout(r, 600));
 
-    // 6. Giáo viên chấm ĐÚNG -> Mở quyền đánh bài trên bàn
-    console.log('6️⃣ Giáo viên chấm [Đúng (Mở bài)]...');
+    const peekShot = path.join(SCREENSHOT_DIR, '09-question-minimized-peek-table.png');
+    await page.screenshot({ path: peekShot, fullPage: true });
+    console.log(`📸 Đã lưu ảnh chụp bàn bài khi đang ẩn câu hỏi: ${peekShot}`);
+
+    // 5. Bấm nút "Hiện lại câu hỏi"
+    console.log('5️⃣ Bấm nút [Hiện lại câu hỏi]...');
+    await clickButtonWithText(page, 'Hiện lại câu hỏi');
+    await new Promise(r => setTimeout(r, 600));
+
+    // 6. Giáo viên bấm "Hiện đáp án" và chấm Đúng
+    console.log('6️⃣ Giáo viên bấm [Hiện đáp án] và chấm Đúng...');
+    await clickButtonWithText(page, 'Hiện đáp án');
+    await new Promise(r => setTimeout(r, 500));
     await clickButtonWithText(page, 'Đúng (Mở bài)');
     await new Promise(r => setTimeout(r, 800));
 
-    // Chụp lại toàn cảnh Bàn Chơi Casino hình Oval xanh lá giống ảnh mẫu
-    const casinoTableShot = path.join(SCREENSHOT_DIR, '03-casino-table-13cards.png');
-    await page.screenshot({ path: casinoTableShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${casinoTableShot}`);
-
-    // 7. Chọn bài trên tay và đánh ra bàn (để xuất hiện tổ hợp bài trung tâm giống ảnh mẫu K K K K)
-    console.log('7️⃣ Chọn và đánh bài ra bàn...');
+    // 7. Chọn bài và bấm Đánh Ra Bàn để kích hoạt hiệu ứng đánh bài
+    console.log('7️⃣ Đánh bài để kích hoạt hiệu ứng bay ra bàn...');
     const cards = await page.$$('.cursor-pointer.bg-gradient-to-b');
-    console.log(`Tìm thấy ${cards.length} lá bài trên tay người chơi chính`);
     if (cards.length > 0) {
-      await cards[0].click(); // Chọn lá bài đầu tiên
+      await cards[0].click();
       await new Promise(r => setTimeout(r, 400));
-
-      // Bấm nút Đánh Ra Bàn
       await clickButtonWithText(page, 'Đánh Ra Bàn');
-      console.log('✅ Đã đánh bài ra giữa bàn!');
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 600));
     }
 
-    // Chụp ảnh bàn chơi với bài đã đánh ra giữa
-    const playedShot = path.join(SCREENSHOT_DIR, '04-casino-table-played.png');
-    await page.screenshot({ path: playedShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${playedShot}`);
+    const cardPlayedShot = path.join(SCREENSHOT_DIR, '10-card-played-animated.png');
+    await page.screenshot({ path: cardPlayedShot, fullPage: true });
+    console.log(`📸 Đã lưu ảnh chụp Hiệu ứng Đánh bài: ${cardPlayedShot}`);
 
     await browser.close();
-    console.log('🎉 TOÀN BỘ KIỂM THỬ CDP CASINO TABLE ĐÃ HOÀN TẤT THÀNH CÔNG RỰC RỠ!');
+    console.log('🎉 TOÀN BỘ KIỂM THỬ CDP CHO HIỆU ỨNG XÁO BÀI, ĐÁNH BÀI & NÚT ẨN CÂU HỎI ĐÃ HOÀN TẤT THÀNH CÔNG RỰC RỠ!');
 
     clearTimeout(timeoutGuard);
     cleanup();

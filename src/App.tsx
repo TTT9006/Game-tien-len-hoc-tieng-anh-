@@ -5,11 +5,13 @@ import { CasinoGameTable } from './components/CasinoGameTable';
 import { QuestionModal } from './components/QuestionModal';
 import { PlayCardsModal } from './components/PlayCardsModal';
 import { TeacherDashboard } from './components/TeacherDashboard';
+import { ShuffleOverlay } from './components/ShuffleOverlay';
 
 export const App: React.FC = () => {
   const {
     phase,
     isTeacherMode,
+    isShuffling,
   } = useGameStore();
 
   // Nếu đang ở màn hình Quản lý Giáo viên
@@ -19,7 +21,12 @@ export const App: React.FC = () => {
 
   // Nếu đang ở màn hình Thiết lập ban đầu
   if (phase === 'SETUP') {
-    return <SetupScreen />;
+    return (
+      <>
+        <SetupScreen />
+        <ShuffleOverlay isVisible={isShuffling} />
+      </>
+    );
   }
 
   // Màn hình Game sòng bài Casino Tiến Lên đang diễn ra
@@ -29,6 +36,7 @@ export const App: React.FC = () => {
         <CasinoGameTable />
         <QuestionModal />
         <PlayCardsModal />
+        <ShuffleOverlay isVisible={isShuffling} />
       </main>
     </div>
   );

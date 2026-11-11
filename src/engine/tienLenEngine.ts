@@ -76,13 +76,27 @@ export function createDeck(): Card[] {
 }
 
 /**
- * Xáo trộn bộ bài ngẫu nhiên (Fisher-Yates shuffle)
+ * Thuật toán sinh số ngẫu nhiên an toàn (Cryptographically Secure Pseudo-Random Number Generator nếu có window.crypto)
  */
-export function shuffleDeck(deck: Card[]): Card[] {
-  const shuffled = [...deck];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+function secureRandom(): number {
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    return array[0] / (0xffffffff + 1);
+  }
+  return Math.random();
+}
+
+/**
+ * Xáo trộn bộ bài ngẫu nhiên tuyệt đối (Fisher-Yates shuffle qua nhiều lượt xáo)
+ */
+export function shuffleDeck(deck: Card[], passes: number = 3): Card[] {
+  let shuffled = [...deck];
+  for (let p = 0; p < passes; p++) {
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(secureRandom() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
   }
   return shuffled;
 }

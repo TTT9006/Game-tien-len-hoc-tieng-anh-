@@ -31,6 +31,8 @@ interface GameState {
   lastPlayedTeamId: string | null;
   usedQuestionIds: Set<string>;
   rankings: Team[]; // Đội đã về đích
+  isQuestionMinimized: boolean; // Thu nhỏ / ẩn câu hỏi để nhìn bàn chơi
+  isShuffling: boolean; // Hiệu ứng xáo bài
 
   // Actions quản lý câu hỏi (Teacher)
   setTeacherMode: (val: boolean) => void;
@@ -39,6 +41,7 @@ interface GameState {
   updateQuestionPack: (pack: QuestionPack) => void;
   deleteQuestionPack: (packId: string) => void;
   selectQuestionPack: (packId: string) => void;
+  toggleQuestionMinimized: () => void;
 
   // Actions quản lý ván bài (Gameplay)
   startGame: (numTeams: number, mode: GameMode, packId?: string) => void;
@@ -108,8 +111,12 @@ export const useGameStore = create<GameState>((set, get) => {
     lastPlayedTeamId: null,
     usedQuestionIds: new Set(),
     rankings: [],
+    isQuestionMinimized: false,
+    isShuffling: false,
 
     setTeacherMode: (val) => set({ isTeacherMode: val }),
+
+    toggleQuestionMinimized: () => set(state => ({ isQuestionMinimized: !state.isQuestionMinimized })),
 
     verifyTeacherPin: (pin) => {
       return pin === get().teacherPin;
@@ -142,6 +149,10 @@ export const useGameStore = create<GameState>((set, get) => {
     selectQuestionPack: (packId) => set({ selectedPackId: packId }),
 
     startGame: (numTeams, mode, packId) => {
+      // Bật hiệu ứng Xáo bài và phát âm thanh sột soạt
+      soundService.playShuffle();
+      set({ isShuffling: true });
+
       const targetPackId = packId || get().selectedPackId;
       const pack = get().questionPacks.find(p => p.id === targetPackId) || get().questionPacks[0];
       // Mặc định luôn chia đủ 13 lá theo yêu cầu người dùng
@@ -166,18 +177,22 @@ export const useGameStore = create<GameState>((set, get) => {
       // Chọn câu hỏi đầu tiên
       const randomQ = pack.questions[Math.floor(Math.random() * pack.questions.length)];
 
-      set({
-        phase: 'QUESTION',
-        gameMode: mode,
-        numTeams,
-        teams: initialTeams,
-        currentTeamIndex: 0,
-        currentQuestion: randomQ,
-        tableCards: null,
-        lastPlayedTeamId: null,
-        usedQuestionIds: new Set([randomQ.id]),
-        rankings: [],
-      });
+      setTimeout(() => {
+        set({
+          isShuffling: false,
+          phase: 'QUESTION',
+          gameMode: mode,
+          numTeams,
+          teams: initialTeams,
+          currentTeamIndex: 0,
+          currentQuestion: randomQ,
+          tableCards: null,
+          lastPlayedTeamId: null,
+          usedQuestionIds: new Set([randomQ.id]),
+          rankings: [],
+          isQuestionMinimized: false,
+        });
+      }, 1200); // 1.2s hiệu ứng xáo bài
     },
 
     revealAnswer: () => {

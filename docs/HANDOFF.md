@@ -87,6 +87,21 @@
 
 ## PHẦN III: NHẬT KÝ THAY ĐỔI & TRẠNG THÁI HIỆN TẠI (CHANGELOG & STATUS)
 
+### [2026-11-11] Bổ sung Hiệu ứng Xáo bài, Đánh bài, Nút Ẩn/Hiện Câu hỏi & Thuật toán Chia ngẫu nhiên bảo mật
+- **Nội dung thay đổi**:
+  - Tối ưu hóa thuật toán chia bài ngẫu nhiên 100% trong `src/engine/tienLenEngine.ts`: sử dụng Fisher-Yates shuffle qua 3 lượt kết hợp sinh số ngẫu nhiên bảo mật `window.crypto.getRandomValues()`.
+  - Thêm component `ShuffleOverlay.tsx` tạo hiệu ứng hoạt họa 2 nửa cỗ bài xáo lồng vào nhau sống động trước khi bắt đầu trận đấu.
+  - Thêm hiệu ứng âm thanh Xáo bài (Riffle Shuffle sột soạt) trong `src/services/soundService.ts`.
+  - Thêm nút **`[👁️‍🗨️ Xem bài trước]`** trên Modal câu hỏi (`QuestionModal.tsx`): cho phép tạm ẩn modal câu hỏi thành thanh widget nhỏ gọn để học sinh và giáo viên quan sát rõ tổ hợp bài người chơi trước vừa đánh trên bàn nỉ xanh Casino, sau đó bấm `[Hiện lại câu hỏi]` để tiếp tục lượt chơi.
+  - Thêm hiệu ứng đánh bài ra bàn `animate-card-fly`: quân bài bay từ tay người chơi lên trung tâm bàn nỉ xanh với hiệu ứng phóng to nhẹ và góc xoay tự nhiên.
+  - Chạy kiểm thử tự động toàn diện qua CDP trên Chrome thật `tests/cdp-e2e.test.mjs`, chụp và nghiệm thu 4 ảnh màn hình thực tế: `07-shuffle-animation.png`, `08-question-with-peek-button.png`, `09-question-minimized-peek-table.png`, `10-card-played-animated.png`.
+- **Kiểm tra đã chạy**:
+  - `npm run typecheck`: 100% không lỗi (`tsc --noEmit`).
+  - `npm test`: 6/6 unit tests passed.
+  - `npm run build`: Build production tối ưu hóa không lỗi.
+  - `node tests/cdp-e2e.test.mjs`: Vượt qua toàn bộ kịch bản kiểm thử E2E trên trình duyệt Chrome thật.
+- **Trạng thái**: Hoàn tất 100% tính năng mới. Tiến hành merge và push lên GitHub.
+
 ### [2026-11-11] Hoàn thành thiết kế lại toàn bộ giao diện (Redesign Template Casino Sòng Bài chuẩn 13 lá)
 - **Nội dung thay đổi**:
   - Thiết kế lại toàn bộ template giao diện theo ảnh mẫu sòng bài Casino người dùng cung cấp:

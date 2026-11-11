@@ -23,3 +23,43 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
+
+/* Animations cho Xáo Bài & Đánh Bài */
+@keyframes card-fly-center {
+  0% {
+    transform: translateY(80px) scale(0.6) rotate(10deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-15px) scale(1.1) rotate(-3deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-card-fly {
+  animation: card-fly-center 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes shuffle-left {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-40px) rotate(-15deg); }
+  75% { transform: translateX(20px) rotate(8deg); }
+}
+
+@keyframes shuffle-right {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(40px) rotate(15deg); }
+  75% { transform: translateX(-20px) rotate(-8deg); }
+}
+
+.animate-shuffle-left {
+  animation: shuffle-left 0.8s ease-in-out infinite;
+}
+
+.animate-shuffle-right {
+  animation: shuffle-right 0.8s ease-in-out infinite;
+}
