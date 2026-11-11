@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { Card } from './Card';
 import { Card as CardType } from '../types/game';
-import { GoldCoinRain } from './GoldCoinRain';
 import { Trophy, Award, RotateCcw, Volume2, VolumeX, Shield, Play, SkipForward, Eye, EyeOff } from 'lucide-react';
 import { evaluateCombination } from '../engine/tienLenEngine';
 import { soundService } from '../services/soundService';
@@ -159,9 +158,6 @@ export const CasinoGameTable: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen bg-slate-950 overflow-hidden flex flex-col justify-between select-none">
-      {/* HIỆU ỨNG MƯA ĐỒNG XU CASINO VÀNG LƠ LỬNG */}
-      <GoldCoinRain />
-
       {/* TOP HEADER CONTROLS (Thoát trận, Âm thanh, Giáo viên) */}
       <div className="relative z-30 w-full flex items-center justify-between px-6 py-3 bg-slate-950/40 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center space-x-3">

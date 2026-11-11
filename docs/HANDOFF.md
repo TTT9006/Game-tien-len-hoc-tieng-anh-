@@ -87,6 +87,18 @@
 
 ## PHẦN III: NHẬT KÝ THAY ĐỔI & TRẠNG THÁI HIỆN TẠI (CHANGELOG & STATUS)
 
+### [2026-11-11] Gỡ bỏ hiệu ứng đồng xu vàng lơ lửng trên mặt bàn theo yêu cầu người dùng
+- **Nội dung thay đổi**:
+  - Gỡ bỏ component `GoldCoinRain` và hiệu ứng đồng xu vàng bay lơ lửng che khuất tầm nhìn trên `CasinoGameTable.tsx`.
+  - Giữ lại mặt bàn nỉ xanh Casino thoáng đãng, sắc nét, giúp học sinh và giáo viên tập trung tuyệt đối vào 13 lá bài và bài đánh ra giữa bàn.
+  - Chạy lại kiểm thử tự động toàn diện qua CDP trên Chrome thật `tests/cdp-e2e.test.mjs`, chụp ảnh nghiệm thu mặt bàn sạch sẽ.
+- **Kiểm tra đã chạy**:
+  - `npm run typecheck`: 100% không lỗi (`tsc --noEmit`).
+  - `npm test`: 6/6 unit tests passed.
+  - `npm run build`: Hoàn tất không lỗi.
+  - `node tests/cdp-e2e.test.mjs`: Pass 100% trên Chrome thật.
+- **Trạng thái**: Hoàn thành. Tiến hành merge và push lên GitHub.
+
 ### [2026-11-11] Bổ sung Hiệu ứng Xáo bài, Đánh bài, Nút Ẩn/Hiện Câu hỏi & Thuật toán Chia ngẫu nhiên bảo mật
 - **Nội dung thay đổi**:
   - Tối ưu hóa thuật toán chia bài ngẫu nhiên 100% trong `src/engine/tienLenEngine.ts`: sử dụng Fisher-Yates shuffle qua 3 lượt kết hợp sinh số ngẫu nhiên bảo mật `window.crypto.getRandomValues()`.
