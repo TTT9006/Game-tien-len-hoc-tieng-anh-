@@ -87,7 +87,23 @@
 
 ## PHẦN III: NHẬT KÝ THAY ĐỔI & TRẠNG THÁI HIỆN TẠI (CHANGELOG & STATUS)
 
-### [2026-11-10] Hoàn thành toàn diện dự án Tiến Lên Tiếng Anh v1.0.0 (Classroom Baamboozle Edition)
+### [2026-11-11] Hoàn thành thiết kế lại toàn bộ giao diện (Redesign Template Casino Sòng Bài chuẩn 13 lá)
+- **Nội dung thay đổi**:
+  - Thiết kế lại toàn bộ template giao diện theo ảnh mẫu sòng bài Casino người dùng cung cấp:
+    - Bàn oval nỉ xanh viền gỗ sang trọng với hiệu ứng ánh sáng gradient trung tâm.
+    - Hiệu ứng mưa đồng xu vàng Casino lơ lửng xung quanh bàn (`GoldCoinRain.tsx`).
+    - Dàn bài người chơi chính ở cạnh dưới hiển thị **đầy đủ 13 lá bài** xếp lớp đè nhau (`-space-x-10`), đồ họa quân bài chuẩn quốc tế với hình mặt người J, Q, K và chữ số đậm nét.
+    - Bố trí 3 đối thủ xung quanh bàn (*Chelsea*, *Gabriel*, *Player787312*) với avatar tròn phát sáng viền vàng, xấp bài đứng hiển thị số lượng 13 lá bài úp, chip tiền vàng (K) và nút tròn "Bỏ lượt".
+    - Khu vực bài đánh ra bàn ở trung tâm xòe góc nghệ thuật (giống tổ hợp K K K K trong ảnh mẫu).
+  - Cập nhật chế độ chơi mặc định đủ 13 lá bài mỗi đội.
+  - Sửa cấu hình `vite.config.ts` để Vitest chỉ quét các file `.test.ts` trong `src/`, tránh xung đột với script CDP.
+  - Chạy kiểm thử tự động toàn diện qua CDP trên Chrome thật `tests/cdp-e2e.test.mjs`, chụp ảnh màn hình nghiệm thu thực tế `03-casino-table-13cards.png` và `04-casino-table-played.png`.
+- **Kiểm tra đã chạy**:
+  - `npm run typecheck`: 100% pass (`tsc --noEmit`).
+  - `npm test`: 6/6 unit tests passed.
+  - `npm run build`: Build production hoàn tất không lỗi.
+  - `node tests/cdp-e2e.test.mjs`: Vượt qua toàn bộ bài test CDP trên Chrome thật.
+- **Trạng thái**: Hoàn thành xuất sắc toàn bộ yêu cầu giao diện mới của người dùng. Tiến hành merge và push lên GitHub.
 - **Nội dung thay đổi**:
   - Xây dựng hoàn chỉnh kiến trúc Vite 6 + React 19 + TypeScript + Tailwind CSS.
   - Xây dựng động cơ bài Tiến Lên Miền Nam `src/engine/tienLenEngine.ts` với đầy đủ luật chặn heo, đôi heo, 3 đôi thông, tứ quý, 4 đôi thông.

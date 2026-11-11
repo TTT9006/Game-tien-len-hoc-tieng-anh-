@@ -50,11 +50,12 @@ export interface QuestionPack {
 export interface Team {
   id: string;
   name: string;
+  avatar: string; // URL hoặc svg avatar
   color: string; // Tailwind color class or hex
   cards: Card[];
   hasPassedTurn: boolean; // Bỏ lượt trong vòng hiện tại
   rank?: number;          // Thứ hạng về (1: Nhất, 2: Nhì, ...)
-  score: number;          // Điểm cộng thêm
+  score: number;          // Điểm / Chip vàng
 }
 
 export type GameMode = 'standard' | 'classroom'; // 13 lá hoặc 6-8 lá

@@ -108,48 +108,48 @@ export const SetupScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* 2. Chọn Chế Độ Chơi (Tốc độ / Chuẩn) */}
+          {/* 2. Chọn Chế Độ Chơi (13 lá đầy đủ chuẩn sòng bài) */}
           <div>
             <label className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center space-x-2 mb-3">
               <Clock className="w-4 h-4 text-amber-400" />
-              <span>Thời lượng & Chế độ chơi</span>
+              <span>Chế độ chơi (Đủ 13 lá sòng bài Casino)</span>
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
-                onClick={() => setMode('classroom')}
+                onClick={() => setMode('standard')}
                 className={`p-4 rounded-2xl text-left border transition-all cursor-pointer ${
-                  mode === 'classroom'
+                  mode === 'standard'
                     ? 'bg-amber-500/10 border-amber-400 text-white shadow-lg shadow-amber-500/10'
                     : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-extrabold text-sm text-amber-400">⚡ Chế độ Nhanh Lớp Học</span>
+                  <span className="font-extrabold text-sm text-amber-400">🎴 Chế độ Chuẩn Casino (13 Lá)</span>
                   <span className="text-[11px] font-bold bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded">
-                    Khuyên dùng
+                    Chuẩn ảnh mẫu
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  8 lá/đội, hoàn thành trong 10 - 15 phút tiết học.
+                  Đủ 13 lá/đội (52 lá bài), dàn bài xòe rộng phong cách VIP.
                 </p>
               </button>
 
               <button
-                onClick={() => setMode('standard')}
+                onClick={() => setMode('classroom')}
                 className={`p-4 rounded-2xl text-left border transition-all cursor-pointer ${
-                  mode === 'standard'
+                  mode === 'classroom'
                     ? 'bg-indigo-600/10 border-indigo-500 text-white shadow-lg shadow-indigo-600/10'
                     : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-extrabold text-sm text-indigo-400">🎴 Chế độ Chuẩn</span>
+                  <span className="font-extrabold text-sm text-indigo-400">⚡ Chế độ Nhanh Lớp Học (8 Lá)</span>
                   <span className="text-[11px] font-bold bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">
-                    Đầy đủ
+                    10 Phút
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  13 lá/đội (52 lá bài), trải nghiệm Tiến Lên nguyên bản.
+                  8 lá/đội, kết thúc ván bài nhanh gọn trong tiết học.
                 </p>
               </button>
             </div>

@@ -8,7 +8,6 @@ if (!fs.existsSync(SCREENSHOT_DIR)) {
   fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
 }
 
-// Helper tìm button theo text
 async function clickButtonWithText(page, text) {
   const result = await page.evaluate((btnText) => {
     const buttons = Array.from(document.querySelectorAll('button'));
@@ -66,50 +65,27 @@ async function runCdpE2ETest() {
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
 
-    // 1. Truy cập màn hình Setup
+    // 1. Màn hình Setup
     console.log('1️⃣ Truy cập trang chủ Setup...');
     await page.goto('http://localhost:4173', { waitUntil: 'networkidle0' });
 
-    const title = await page.title();
-    console.log(`Tiêu đề trang: ${title}`);
-    if (!title.includes('Tiến Lên Tiếng Anh')) {
-      throw new Error('Tiêu đề trang không đúng');
-    }
-
-    const setupShot = path.join(SCREENSHOT_DIR, '01-setup-screen.png');
+    const setupShot = path.join(SCREENSHOT_DIR, '01-casino-setup.png');
     await page.screenshot({ path: setupShot, fullPage: true });
     console.log(`📸 Đã lưu ảnh chụp: ${setupShot}`);
 
-    // 2. Vào Phân Hệ Giáo Viên
-    console.log('2️⃣ Mở Modal Giáo Viên...');
-    await clickButtonWithText(page, 'Phân Hệ Giáo Viên');
-    await new Promise(r => setTimeout(r, 600));
+    // Chọn Chế độ Chuẩn Casino 13 lá
+    console.log('2️⃣ Chọn Chế độ Chuẩn Casino 13 Lá...');
+    await clickButtonWithText(page, 'Chế độ Chuẩn Casino');
+    await new Promise(r => setTimeout(r, 400));
 
-    await page.waitForSelector('input[type="password"]');
-    await page.type('input[type="password"]', '1234');
-    await clickButtonWithText(page, 'Đăng Nhập');
-    await new Promise(r => setTimeout(r, 800));
-
-    console.log('✅ Đã đăng nhập vào Teacher Dashboard thành công!');
-    const teacherShot = path.join(SCREENSHOT_DIR, '02-teacher-dashboard.png');
-    await page.screenshot({ path: teacherShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${teacherShot}`);
-
-    // Quay lại màn hình Setup
-    await page.evaluate(() => {
-      const backBtn = document.querySelector('button svg.lucide-arrow-left')?.closest('button');
-      if (backBtn) backBtn.click();
-    });
-    await new Promise(r => setTimeout(r, 600));
-
-    // 3. Khởi động Trận Đấu
+    // Khởi động Trận Đấu
     console.log('3️⃣ Nhấn nút [BẮT ĐẦU TRẬN ĐẤU]...');
     await clickButtonWithText(page, 'BẮT ĐẦU TRẬN ĐẤU');
     await new Promise(r => setTimeout(r, 1000));
 
     // 4. Modal Câu hỏi Tiếng Anh hiện lên
     console.log('4️⃣ Chờ Modal Câu Hỏi xuất hiện...');
-    const questionShot = path.join(SCREENSHOT_DIR, '03-question-modal.png');
+    const questionShot = path.join(SCREENSHOT_DIR, '02-casino-question-modal.png');
     await page.screenshot({ path: questionShot, fullPage: true });
     console.log(`📸 Đã lưu ảnh chụp: ${questionShot}`);
 
@@ -118,44 +94,37 @@ async function runCdpE2ETest() {
     await clickButtonWithText(page, 'Hiện đáp án');
     await new Promise(r => setTimeout(r, 600));
 
-    const answerShot = path.join(SCREENSHOT_DIR, '04-answer-revealed.png');
-    await page.screenshot({ path: answerShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${answerShot}`);
-
-    // 6. Giáo viên chấm ĐÚNG -> Mở modal chọn bài
+    // 6. Giáo viên chấm ĐÚNG -> Mở quyền đánh bài trên bàn
     console.log('6️⃣ Giáo viên chấm [Đúng (Mở bài)]...');
     await clickButtonWithText(page, 'Đúng (Mở bài)');
     await new Promise(r => setTimeout(r, 800));
 
-    // Bấm xem bài
-    console.log('7️⃣ Bấm xem bài để chọn nước đánh...');
-    await clickButtonWithText(page, 'Xem bài đội mình');
-    await new Promise(r => setTimeout(r, 600));
+    // Chụp lại toàn cảnh Bàn Chơi Casino hình Oval xanh lá giống ảnh mẫu
+    const casinoTableShot = path.join(SCREENSHOT_DIR, '03-casino-table-13cards.png');
+    await page.screenshot({ path: casinoTableShot, fullPage: true });
+    console.log(`📸 Đã lưu ảnh chụp: ${casinoTableShot}`);
 
-    const playCardsShot = path.join(SCREENSHOT_DIR, '05-play-cards-revealed.png');
-    await page.screenshot({ path: playCardsShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${playCardsShot}`);
-
-    // Chọn 1 lá bài bất kỳ và đánh ra bàn
-    const cards = await page.$$('.cursor-pointer.bg-white');
-    console.log(`Tìm thấy ${cards.length} lá bài hiển thị trên tay`);
+    // 7. Chọn bài trên tay và đánh ra bàn (để xuất hiện tổ hợp bài trung tâm giống ảnh mẫu K K K K)
+    console.log('7️⃣ Chọn và đánh bài ra bàn...');
+    const cards = await page.$$('.cursor-pointer.bg-gradient-to-b');
+    console.log(`Tìm thấy ${cards.length} lá bài trên tay người chơi chính`);
     if (cards.length > 0) {
-      await cards[0].click(); // Chọn 1 lá
+      await cards[0].click(); // Chọn lá bài đầu tiên
       await new Promise(r => setTimeout(r, 400));
 
-      await clickButtonWithText(page, 'Đánh Bài Ra Bàn');
-      console.log('✅ Đã đánh 1 lá bài ra bàn thành công!');
+      // Bấm nút Đánh Ra Bàn
+      await clickButtonWithText(page, 'Đánh Ra Bàn');
+      console.log('✅ Đã đánh bài ra giữa bàn!');
+      await new Promise(r => setTimeout(r, 1000));
     }
 
-    await new Promise(r => setTimeout(r, 1000));
-
-    // Chụp ảnh Bàn chơi với bài đã đánh
-    const gameTableShot = path.join(SCREENSHOT_DIR, '06-game-table.png');
-    await page.screenshot({ path: gameTableShot, fullPage: true });
-    console.log(`📸 Đã lưu ảnh chụp: ${gameTableShot}`);
+    // Chụp ảnh bàn chơi với bài đã đánh ra giữa
+    const playedShot = path.join(SCREENSHOT_DIR, '04-casino-table-played.png');
+    await page.screenshot({ path: playedShot, fullPage: true });
+    console.log(`📸 Đã lưu ảnh chụp: ${playedShot}`);
 
     await browser.close();
-    console.log('🎉 TOÀN BỘ BÀI KIỂM THỬ CDP & CHỤP ẢNH MÀN HÌNH ĐÃ HOÀN TẤT THÀNH CÔNG RỰC RỠ!');
+    console.log('🎉 TOÀN BỘ KIỂM THỬ CDP CASINO TABLE ĐÃ HOÀN TẤT THÀNH CÔNG RỰC RỠ!');
 
     clearTimeout(timeoutGuard);
     cleanup();

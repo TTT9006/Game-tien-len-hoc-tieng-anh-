@@ -50,10 +50,30 @@ interface GameState {
 }
 
 const DEFAULT_TEAMS_DATA: Omit<Team, 'cards' | 'hasPassedTurn' | 'score'>[] = [
-  { id: 'team-1', name: 'Đội Đỏ (Red Fire)', color: 'from-rose-600 to-red-700' },
-  { id: 'team-2', name: 'Đội Lam (Blue Thunder)', color: 'from-sky-600 to-blue-700' },
-  { id: 'team-3', name: 'Đội Lục (Green Emerald)', color: 'from-emerald-600 to-green-700' },
-  { id: 'team-4', name: 'Đội Vàng (Golden Sun)', color: 'from-amber-500 to-yellow-600' },
+  {
+    id: 'team-1',
+    name: 'Player011392',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    color: 'from-amber-500 to-yellow-600',
+  },
+  {
+    id: 'team-2',
+    name: 'Chelsea',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+    color: 'from-pink-500 to-rose-600',
+  },
+  {
+    id: 'team-3',
+    name: 'Gabriel',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    color: 'from-blue-600 to-indigo-700',
+  },
+  {
+    id: 'team-4',
+    name: 'Player787312',
+    avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80',
+    color: 'from-emerald-500 to-teal-700',
+  },
 ];
 
 export const useGameStore = create<GameState>((set, get) => {
@@ -124,7 +144,8 @@ export const useGameStore = create<GameState>((set, get) => {
     startGame: (numTeams, mode, packId) => {
       const targetPackId = packId || get().selectedPackId;
       const pack = get().questionPacks.find(p => p.id === targetPackId) || get().questionPacks[0];
-      const cardsPerTeam = mode === 'standard' ? 13 : 8;
+      // Mặc định luôn chia đủ 13 lá theo yêu cầu người dùng
+      const cardsPerTeam = mode === 'classroom' ? 8 : 13;
 
       const { hands } = dealCards(numTeams, cardsPerTeam);
 
@@ -134,10 +155,11 @@ export const useGameStore = create<GameState>((set, get) => {
         initialTeams.push({
           id: meta.id,
           name: meta.name,
+          avatar: meta.avatar,
           color: meta.color,
           cards: hands[i],
           hasPassedTurn: false,
-          score: 0,
+          score: 100, // Khởi đầu với 100K vàng
         });
       }
 
